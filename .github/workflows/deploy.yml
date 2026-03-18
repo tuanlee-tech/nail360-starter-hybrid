@@ -1,0 +1,54 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: ReactApp/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd ReactApp
+          npm install
+
+      - name: Build React App
+        run: |
+          cd ReactApp
+          npm run build
+
+      - name: Prepare GH-Pages folder
+        run: |
+          mkdir -p deploy
+          # Copy everything from public to deploy
+          cp -r public/* deploy/
+          # Copy root level documentation and placeholders if needed
+          cp README.md deploy/
+          cp README-SETUP.md deploy/
+          cp README-DEV.md deploy/
+          # Create a static index.html from Landing.html produced by Webpack
+          # Because GH Pages doesn't run index.php
+          cp public/assets/react/Landing.html deploy/index.html
+          # Fix assets path in the new index.html (if needed)
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: deploy
+          branch: gh-pages

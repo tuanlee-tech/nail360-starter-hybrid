@@ -19,6 +19,10 @@ if ($requestUri === '/' || $requestUri === '/index.php') {
 } elseif ($requestUri === '/salons') {
     $seo->setTitle('Danh sách Salon - Nail360');
     $viewFile = __DIR__ . '/../views/pages/salons.php';
+} elseif ($requestUri === '/learn') {
+    $seo->setTitle('Tìm hiểu về Nail360 Hybrid Pro');
+    $seo->setDescription('Khám phá sức mạnh của kiến trúc Hybrid: Tốc độ của React, Sức mạnh SEO của PHP.');
+    $viewFile = __DIR__ . '/../views/pages/learn.php';
 } elseif (preg_match('#^/salon/([^/]+)$#', $requestUri, $matches)) {
     // Bắt được slug từ URL (VD: /salon/luxury-nail-spa)
     $salonSlug = $matches[1];

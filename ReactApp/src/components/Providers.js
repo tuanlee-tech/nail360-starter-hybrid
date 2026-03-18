@@ -12,10 +12,16 @@ const queryClient = new QueryClient({
   },
 });
 
+export const Providers = ({ children }) => (
+  <QueryClientProvider client={queryClient}>
+    {children}
+  </QueryClientProvider>
+);
+
 export const withProviders = (Component) => {
   return (props) => (
-    <QueryClientProvider client={queryClient}>
+    <Providers>
       <Component {...props} />
-    </QueryClientProvider>
+    </Providers>
   );
 };
