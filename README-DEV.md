@@ -169,4 +169,15 @@ useEffect(() => {
 **Bí quyết**: Luôn ưu tiên Set SEO ở PHP cho các nội dung cố định (Page Title, OG Image) và dùng React để tinh chỉnh các nội dung tương tác.
 
 ---
+
+## 💡 Mẹo "Xem nhanh" (Quick Preview)
+
+Khi bạn đang code và muốn trình duyệt tự động mở đúng trang mình đang làm tại `localhost:3000`:
+
+1.  Mở file `.env` trong thư mục `ReactApp`.
+2.  Đưa tên module bạn đang code lên vị trí đầu tiên trong danh sách `BUILD_TARGET`.
+    - Ví dụ: `BUILD_TARGET=Landing,home,SalonDetail`
+3.  Lúc này, trang `Landing` sẽ trở thành trang chủ (`index.html`) của cổng 3000. Bạn chỉ cần gõ `localhost:3000` là thấy ngay hòn đảo của mình đang "Hot Reload".
+
+---
 **Chúc bạn code vui vẻ!** Nếu gặp khó khăn, hãy hỏi TeamLead hoặc soi các module có sẵn như `SalonDetail` để học hỏi. 💅🚀✨

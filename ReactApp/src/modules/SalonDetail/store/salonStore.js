@@ -6,7 +6,7 @@ const useSalonStore = create((set) => ({
   toggleFavorite: () => set((state) => ({ isFavorite: !state.isFavorite })),
 
   salonName: 'Luxury Nail Spa - Quận 1',
-  // Sếp có thể lưu bất kỳ dữ liệu phức tạp nào ở đây
+  // Có thể lưu bất kỳ dữ liệu phức tạp nào ở đây
 }));
 
 export default useSalonStore;

@@ -197,4 +197,78 @@ Class `ReactLoader` đã được thiết kế thông minh:
 4. [ ] Cấu hình SSL (HTTPS) để bảo mật cho hệ thống Token.
 
 ---
+
+## 🔍 8. Deep-Dive: Webpack Config Decisions (Tại sao lại làm thế?)
+
+Để TeamLead hiểu rõ "linh hồn" của bộ đóng gói này, dưới đây là giải trình các quyết định then chốt:
+
+### 1. `publicPath: '/assets/react/'`
+- **Quyết định**: Ép mọi tài nguyên phải đi qua prefix này.
+- **Lý do**: Để đồng nhất 100% giữa môi trường Dev (Port 3000) và Prod (Port 80/443). Khi React nạp các "mảnh" (Chunks), nó sẽ tự biết tìm đến đúng thư mục assets của dự án PHP.
+
+### 2. `filename: '[name].[contenthash].js'`
+- **Quyết định**: Sử dụng mã băm nội dung.
+- **Lý do**: Giải quyết triệt để lỗi "sửa code nhưng khách hàng không thấy đổi". Nếu nội dung file không đổi, hash không đổi -> Browser dùng cache cũ. Nếu có 1 dấu phẩy thay đổi -> Hash đổi -> Browser bắt buộc tải mới.
+
+### 3. `writeToDisk: true` (trong DevServer)
+- **Quyết định**: Vừa chạy port 3000 vừa ghi file thật ra đĩa.
+- **Lý do**: Đây là "cầu nối" Hybrid. PHP cần file `manifest.json` thật trên đĩa để biết script nào đang chạy mà nhúng vào HTML. Nếu chỉ lưu trên bộ nhớ (mặc định), PHP sẽ không biết nạp cái gì.
+
+### 4. `splitChunks: { name: 'vendor' }`
+- **Quyết định**: Tách React, ReactDOM ra file riêng.
+- **Lý do**: Những thư viện này rất nặng nhưng ít khi thay đổi. Tách ra giúp file tính năng (ví dụ `Landing.js`) rất nhẹ, giúp Web tải nhanh hơn đáng kể.
+
+---
+
+## 💡 Mẹo "Xem nhanh"
+Khi đang ngồi ở "Công xưởng" (Port 3000) và muốn mở lên là thấy ngay cái mình đang làm:
+
+**Cách làm**: Hãy đưa module đó lên đầu tiên trong file `.env`:
+```bash
+# Muốn xem Landing mặc định tại localhost:3000
+BUILD_TARGET=Landing,home,SalonDetail
+```
+**Tại sao**: Webpack được cấu hình để biến thằng đầu tiên thành `index.html`. Chỉ cần gõ đúng IP/Domain là nó đập ngay vào mắt, không cần gõ hậu tố loằng ngoằng.
+
+---
+
+## 🚀 9. CI/CD Flow & Advanced Configuration
+
+Hệ thống đã được tích hợp luồng xuất bản tự động qua GitHub Actions. Dưới đây là cách tùy biến và vận hành nâng cao:
+
+```mermaid
+graph TD
+    A[Push Code] --> B{GitHub Actions}
+    B --> C[Setup Build Env]
+    C --> D[Override BUILD_TARGET]
+    D --> E[npm run build]
+    E --> F[Generate manifest.json]
+    F --> G[Deploy to Server/CDN]
+    G --> H((Website Live!))
+```
+
+### Biến môi trường trong CI/CD
+Có thể tùy biến danh sách module cần build thông qua file workflow. Tuy nhiên, dự án đã được tích hợp **Bảng điều khiển thủ công (Manual Trigger)**.
+
+### 🎮 Mẹo: Điều khiển Build từ xa (Không cần sửa code)
+Khi muốn build nhanh một danh sách module khác mà không muốn sửa file YAML:
+1.  Vào mục **Actions** trên GitHub repository.
+2.  Chọn workflow **Deploy to GitHub Pages**.
+3.  Bấm vào nút **Run workflow**.
+4.  Nhập danh sách module vào ô **build_target**.
+    - **Ví dụ 1 (Build tất cả)**: `home,SalonDetail,Landing`
+    - **Ví dụ 2 (Chỉ build Landing để demo nhanh)**: `Landing`
+    - **Ví dụ 3 (Build trang chủ và Salon)**: `home,SalonDetail`
+5.  Bấm **Run workflow** một lần nữa. Hệ thống sẽ tự động build và cập nhật đúng những gì yêu cầu.
+
+### Cơ chế Tự động nhận diện (ReactLoader + Manifest)
+Đây là "phép thuật" giúp PHP luôn trỏ đúng file dù ở bất kỳ môi trường nào:
+1. **Webpack**: Khi build (ở Local hay CI/CD), Webpack sinh ra `manifest.json` ghi lại ánh xạ giữa tên module và file thực tế (ví dụ `Landing.js` -> `Landing.a1b2c3.js`).
+2. **ReactLoader**: Lớp PHP này luôn đọc `manifest.json` trước khi nhúng script. 
+3. **Kết quả**: Chỉ cần tệp manifest được cập nhật trên server, PHP sẽ tự động nạp đúng phiên bản JS/CSS mới nhất mà không cần can thiệp vào mã nguồn backend.
+
+> [!IMPORTANT]
+> GitHub Pages hiện tại chỉ dùng để phục vụ bản Preview tĩnh. Để vận hành toàn bộ hệ thống (PHP + DB), cần triển khai lên Hosting/VPS hỗ trợ PHP 8.x và đảm bảo thư mục `public/assets/react/` luôn chứa bản build mới nhất kèm manifest.
+
+---
 **Nail360 Hybrid Pro V3** - *Kiến trúc bền vững cho tương lai. 🚀*

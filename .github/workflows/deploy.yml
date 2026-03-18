@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - main
+  # Cho phép chạy thủ công và chọn module cần build từ giao diện GitHub
+  workflow_dispatch:
+    inputs:
+      build_target:
+        description: 'Danh sách các module cần build (ví dụ: home,Landing)'
+        required: true
+        default: 'home,SalonDetail,Landing'
 
 permissions:
   contents: write
@@ -32,6 +39,9 @@ jobs:
         run: |
           cd ReactApp
           npm run build
+        env:
+          # Ưu tiên lấy từ input thủ công, nếu không có thì dùng mặc định
+          BUILD_TARGET: ${{ github.event.inputs.build_target || 'home,SalonDetail,Landing' }}
 
       - name: Prepare GH-Pages folder
         run: |
