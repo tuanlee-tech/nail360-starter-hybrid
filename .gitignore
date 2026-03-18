@@ -1,0 +1,39 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Build outputs
+dist/
+public/assets/react/*.js
+public/assets/react/*.css
+public/assets/react/*.json
+public/assets/react/*.map
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
+
+# OS metadata
+Thumbs.db
+ehthumbs.db
+
+# Temporary files
+/tmp/
+.temp/

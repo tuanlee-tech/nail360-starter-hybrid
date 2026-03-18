@@ -1,0 +1,18 @@
+# 🛡️ APACHE CONFIG EXAMPLE
+# Copy file này thành .htaccess để kích hoạt URL Rewrite
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Trỏ tất cả yêu cầu không phải file/thư mục thật vào public/index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ public/index.php [L,QSA]
+</IfModule>
+
+# Bảo mật: Chặn truy cập trực tiếp vào các thư mục lõi
+RedirectMatch 404 ^/includes/.*$
+RedirectMatch 404 ^/views/.*$
+RedirectMatch 404 ^/ReactApp/.*$
+RedirectMatch 404 ^/\.env$

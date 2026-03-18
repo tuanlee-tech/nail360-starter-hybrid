@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nail360 - Component Preview</title>
+    <!-- Thêm font Inter như spec -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .preview-header {
+        background: #f8f9fa;
+        padding: 10px 20px;
+        border-bottom: 1px solid #ddd;
+        font-size: 12px;
+        color: #666;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .badge {
+        background: #ff69b4;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="preview-header">
+      <span>Component: <span class="badge">SalonDetail</span></span>
+      <span>Môi trường: <b>Công xưởng (Port 3000)</b></span>
+    </div>
+
+    <!-- Container tự động khớp với logic trong entry file -->
+    
+    <div class="max-w-4xl mx-auto p-6 space-y-6">
+      <div id="salon-info-root"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div id="salon-reviews-root"></div>
+        <div id="salon-booking-root"></div>
+      </div>
+      <div class="mt-10 p-4 bg-blue-50 text-blue-800 rounded-lg text-sm italic">
+        💡 Đây là chế độ <b>Parallel Regions</b>. Sếp có thể thêm <code>?crash=true</code> vào URL
+        để xem vùng Review bị crash mà các vùng khác vẫn chạy bình thường.
+      </div>
+    </div>
+    
+  <script defer src="/assets/react/vendor.ed0770607ced552e4c5b.js"></script><script defer src="/assets/react/SalonDetail.28e654bb7f5829c7101d.js"></script></body>
+</html>

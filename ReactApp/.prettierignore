@@ -1,0 +1,6 @@
+node_modules
+dist
+public/assets/react
+manifest.json
+.env
+*.md
