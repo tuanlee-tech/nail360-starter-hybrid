@@ -42,6 +42,8 @@ jobs:
         env:
           # Ưu tiên lấy từ input thủ công, nếu không có thì dùng mặc định
           BUILD_TARGET: ${{ github.event.inputs.build_target || 'home,SalonDetail,Landing' }}
+          # Cấu hình đường dẫn Assets cho GitHub Pages (Sub-path /nail360-starter-hybrid/)
+          PUBLIC_PATH: /nail360-starter-hybrid/assets/react/
 
       - name: Prepare GH-Pages folder
         run: |

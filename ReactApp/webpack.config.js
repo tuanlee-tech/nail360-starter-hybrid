@@ -44,9 +44,8 @@ module.exports = {
     path: path.resolve(__dirname, '../public/assets/react'),
     // Tên file sử dụng thẻ [contenthash] để chống cache trình duyệt (cache busting)
     filename: '[name].[contenthash].js',
-    publicPath: '/assets/react/',
+    publicPath: process.env.PUBLIC_PATH || '/assets/react/',
     clean: true, // Xóa các file build cũ trong thư mục output
-    // publicPath được loại bỏ để Preview HTML hiện ở gốc cổng 3000
   },
 
   module: {
