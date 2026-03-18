@@ -60,20 +60,24 @@ const Landing = () => {
           <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[3.5rem] p-8 md:p-12 shadow-3xl">
             <div className="grid grid-cols-1 md:grid-cols-5 gap-6 lg:gap-4 relative z-10 text-center">
                {[
-                 { icon: <Server />, title: "Request", color: "indigo", label: "PHP Router" },
-                 { icon: <Database />, title: "Model", color: "emerald", label: "Db / Seo Helper" },
-                 { icon: <Zap />, title: "Bridge", color: "amber", label: "Manifest JSON" },
-                 { icon: <Cpu />, title: "Island", color: "purple", label: "React Mount" },
-                 { icon: <Layout />, title: "Sync", color: "slate", label: "Zustand State" }
+                 { icon: <Server />, title: "Request", bg: "group-hover:bg-indigo-600", shadow: "group-hover:shadow-indigo-500/50", label: "PHP Router" },
+                 { icon: <Database />, title: "Model", bg: "group-hover:bg-emerald-600", shadow: "group-hover:shadow-emerald-500/50", label: "Db / Seo Helper" },
+                 { icon: <Zap />, title: "Bridge", bg: "group-hover:bg-amber-600", shadow: "group-hover:shadow-amber-500/50", label: "Manifest JSON" },
+                 { icon: <Cpu />, title: "Island", bg: "group-hover:bg-purple-600", shadow: "group-hover:shadow-purple-500/50", label: "React Mount" },
+                 { icon: <Layout />, title: "Sync", bg: "group-hover:bg-slate-700", shadow: "group-hover:shadow-slate-500/50", label: "Zustand State" }
                ].map((node, i) => (
                  <div key={i} className="flex flex-col items-center group relative">
-                    {i < 4 && <div className="hidden lg:block absolute top-12 left-[100%] w-full h-px bg-white/10 -ml-12"></div>}
-                    <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mb-6 transition-all duration-500 bg-white/5 border border-white/10 group-hover:bg-${node.color}-600 group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(79,70,229,0.3)]`}>
-                       {React.cloneElement(node.icon, { size: 28, className: "text-white" })}
+                    {i < 4 && (
+                      <div className="hidden lg:block absolute top-10 left-[75%] w-[50%] h-[2px] bg-white/10 z-0">
+                         <div className="w-full h-full bg-indigo-500/50 scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left"></div>
+                      </div>
+                    )}
+                    <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mb-6 transition-all duration-500 bg-white/5 border border-white/10 relative z-10 shadow-xl ${node.bg} ${node.shadow} group-hover:scale-110 group-hover:-rotate-3`}>
+                       {React.cloneElement(node.icon, { size: 28, className: "text-white group-hover:scale-110 transition-transform" })}
                     </div>
-                    <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 italic">Step 0{i+1}</div>
+                    <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 italic group-hover:text-indigo-400 transition-colors">Step 0{i+1}</div>
                     <h4 className="font-black text-white text-[11px] uppercase tracking-tighter mb-1">{node.title}</h4>
-                    <p className="text-[9px] text-slate-500 font-bold uppercase tracking-tight opacity-0 group-hover:opacity-100 transition-opacity leading-none">{node.label}</p>
+                    <p className="text-[9px] text-slate-500 font-bold uppercase tracking-tight opacity-0 group-hover:opacity-100 transition-opacity leading-none italic">{node.label}</p>
                  </div>
                ))}
             </div>
