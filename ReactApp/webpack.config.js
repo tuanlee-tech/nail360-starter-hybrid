@@ -99,6 +99,7 @@ module.exports = {
 
   // Cấu hình Dev Server cho "Công xưởng" React
   devServer: {
+    open: process.env.PUBLIC_PATH || '/assets/react/',
     static: {
       directory: path.join(__dirname, '../public'),
     },

@@ -4,6 +4,7 @@ jspm_packages/
 
 # Build outputs
 dist/
+public/assets/react/*.html
 public/assets/react/*.js
 public/assets/react/*.css
 public/assets/react/*.json
