@@ -271,4 +271,45 @@ Khi muốn build nhanh một danh sách module khác mà không muốn sửa fil
 > GitHub Pages hiện tại chỉ dùng để phục vụ bản Preview tĩnh. Để vận hành toàn bộ hệ thống (PHP + DB), cần triển khai lên Hosting/VPS hỗ trợ PHP 8.x và đảm bảo thư mục `public/assets/react/` luôn chứa bản build mới nhất kèm manifest.
 
 ---
+
+## 🔄 10. Luồng Tài nguyên Chi tiết (Asset Lifecycle)
+
+Để hiểu rõ cách React và PHP "bắt tay" với nhau qua từng bản build, dưới đây là mô tả chi tiết luồng dữ liệu kèm ví dụ minh họa:
+
+### 1. Luồng tạo File (Webpack Build Flow)
+Khi bạn chạy `npm run start` (hoặc `npm run build`), Webpack sẽ thực hiện các bước sau:
+1.  **Xác định Entry Points**: Webpack đọc file `.env` để biết cần build những component nào (ví dụ: `home`, `SalonDetail`). Nó tìm các file tương ứng trong `src/entries/`.
+2.  **Biên dịch (Compilation)**:
+    *   **JS/JSX**: Được Babel chuyển đổi về mã Javascript mà trình duyệt hiểu được.
+    *   **CSS/Tailwind**: Được PostCSS xử lý và đóng gói.
+3.  **Băm tên file (Hashing)**: Để tránh việc trình duyệt lưu bản cũ (cache), Webpack thêm một chuỗi mã băm vào tên file, ví dụ: `SalonDetail.1b164725.js`.
+4.  **Tạo Manifest (`manifest.json`)**: Đây là bước quan trọng nhất. Plugin `WebpackManifestPlugin` sẽ tạo ra một file "từ điển" lưu tại `public/assets/react/manifest.json`. Nội dung của nó trông như thế này:
+    ```json
+    {
+      "SalonDetail.js": "/assets/react/SalonDetail.1b164725.js",
+      "vendor.js": "/assets/react/vendor.1c956590.js"
+    }
+    ```
+5.  **Tạo file HTML Preview**: `HtmlWebpackPlugin` tạo ra các file `.html` trong thư mục output để bạn có thể xem nhanh các hòn đảo này mà không cần PHP (phục vụ lúc phát triển giao diện).
+
+---
+
+### 2. Luồng PHP đọc Manifest và tải Tài nguyên
+Khi một người dùng truy cập vào một trang PHP (ví dụ: `salon-detail.php`), quá trình tải React diễn ra như sau:
+1.  **Gọi Loader**: Trong mã nguồn PHP, bạn gọi hàm:
+    ```php
+    ReactLoader::loadScripts('SalonDetail');
+    ```
+2.  **Đọc Manifest**: Lớp `ReactLoader` tìm đến file `public/assets/react/manifest.json` và đọc nội dung của nó vào một mảng (array).
+3.  **Tra cứu tên file thật**:
+    *   `ReactLoader` tìm từ khóa `SalonDetail.js` trong mảng manifest.
+    *   Nó nhận được giá trị là `/assets/react/SalonDetail.1b164725.js`.
+4.  **Xử lý Vendor (Thư viện chung)**: Vì Webpack đã tách các thư viện (như React, ReactDOM) ra một file riêng gọi là `vendor.js` để tối ưu, `ReactLoader` sẽ tự động tìm và in ra thẻ `<script>` của `vendor` trước.
+5.  **In thẻ HTML**: Cuối cùng, PHP sẽ "đổ" ra mã HTML tương ứng vào trình duyệt:
+    ```html
+    <script src="/assets/react/vendor.1c956590.js" defer></script>
+    <script src="/assets/react/SalonDetail.1b164725.js" defer></script>
+    ```
+
+---
 **Nail360 Hybrid Pro V3** - *Kiến trúc bền vững cho tương lai. 🚀*
